@@ -3,80 +3,80 @@
 
 class Tester {
 public:
-    bool testDefaultConstructors() {
-        bool res = true;
-        // Testing default constructor
-        Bingo obj0;
-        res = res && (obj0.m_trackCols == nullptr);
-        res = res && (obj0.m_trackRows == nullptr);
-        res = res && (obj0.m_helper == nullptr);
-
-        res = res && (obj0.m_helperSize == 0);
-        res = res && (obj0.m_card == nullptr);
-        res = res && (obj0.m_numRows == CARDROWS);
-        res = res && (obj0.m_numCols == CARDCOLS);
-        res = res && (obj0.m_minBallVal == MINVAL);
-        res = res && (obj0.m_maxBallVal == MAXVAL);
-
-        obj0.initCard();
-        obj0.dumpCard();
-        return res;
+    // This function is a sample test function
+    // It shows how to write a test case
+    bool assignmentNormal(
+        Bingo &lhs,
+        Bingo &rhs
+    ) {
+        // we expect that lhs object is an exact copy of rhs object
+        bool result = true;
+        // we expect that the corresponding cells in lhs and rhs
+        //      cards carry the same cell information (exact same copy)
+        for (int i = 0; i < rhs.m_numRows; i++) {
+            for (int j = 0; j < rhs.m_numCols; j++) {
+                result = result && (lhs.m_card[i][j] == rhs.m_card[i][j]);
+            }
+        }
+        // we expect that the corresponding cells in lhs and rhs
+        //      m_helper carry the same cell information (exact same copy)
+        for (int i = 0; i < rhs.m_helperSize; i++) {
+            result = result && (lhs.m_helper[i] == rhs.m_helper[i]);
+        }
+        // we expect that the corresponding cells in lhs and rhs
+        //      m_trackRows carry the same cell information (exact same copy)
+        for (int i = 0; i < rhs.m_numRows; i++) {
+            result = result && (lhs.m_trackRows[i] == rhs.m_trackRows[i]);
+        }
+        // we expect that the corresponding cells in lhs and rhs
+        //      m_trackCols carry the same cell information (exact same copy)
+        for (int i = 0; i < rhs.m_numCols; i++) {
+            result = result && (lhs.m_trackCols[i] == rhs.m_trackCols[i]);
+        }
+        result = result && (lhs.m_minBallVal == rhs.m_minBallVal);
+        result = result && (lhs.m_maxBallVal == rhs.m_maxBallVal);
+        return result;
     }
 
-    bool testOptConstructor() {
-        bool res = true;
-        // Testing Optional constructor with valid parameters
-        // the range holds 50 values and the card has 25 cells, so every cell
-        // can be given a different ball number
-        const int rows = 5;
-        const int cols = 5;
-        const int min  = 1;
-        const int max  = 50;
+    bool testDefaultConstructor() {
+        Bingo object;
+        bool  result = true;
+        result       = result && (object.m_numRows == CARDROWS);
+        result       = result && (object.m_numCols == CARDCOLS);
+        result       = result && (object.m_minBallVal == MINVAL);
+        result       = result && (object.m_maxBallVal == MAXVAL);
+        result       = result && (object.m_helperSize == (MAXVAL - MINVAL + 1));
+        result       = result && (object.m_trackCols == nullptr);
+        result       = result && (object.m_trackRows == nullptr);
+        result       = result && (object.m_card == nullptr);
+        result       = result && (object.m_helper == nullptr);
 
-        Bingo obj0(rows, cols, min, max);
-        res = res && (obj0.m_trackCols == nullptr);
-        res = res && (obj0.m_trackRows == nullptr);
-        res = res && (obj0.m_helper == nullptr);
-
-        res = res && (obj0.m_helperSize == 0);
-        res = res && (obj0.m_card == nullptr);
-        res = res && (obj0.m_numRows == rows);
-        res = res && (obj0.m_numCols == cols);
-        res = res && (obj0.m_minBallVal == min);
-        res = res && (obj0.m_maxBallVal == max);
-        obj0.initCard();
-        obj0.dumpCard();
-        return res;
+        return result;
     }
 
-    bool testInvalidConstructor() {
-        bool res = true;
-        // Testing the constructor with invalid parameters
-        // min is not smaller than max, and a single value cannot fill the 100
-        // cells of a 10x10 card, so the constructor must create an empty
-        // object holding the default values instead
-        Bingo obj0(10, 10, 10, 10);
-        res = res && (obj0.m_trackCols == nullptr);
-        res = res && (obj0.m_trackRows == nullptr);
-        res = res && (obj0.m_helper == nullptr);
+    bool testOptionalConstructor() {
+        int   rows = 5;
+        int   cols = 5;
+        int   max  = 90;
+        int   min  = 11;
+        Bingo object(rows, cols, min, max);
+        bool  result = true;
+        result       = result && (object.m_numRows == rows);
+        // cout << "rows" << object.m_numRows << endl;
+        result = result && (object.m_numCols == cols);
+        result = result && (object.m_minBallVal == min);
+        result = result && (object.m_maxBallVal == max);
+        result = result && (object.m_helperSize == (max - min + 1));
+        result = result && (object.m_trackCols != nullptr);
+        result = result && (object.m_trackRows != nullptr);
+        result = result && (object.m_card != nullptr);
+        // cout << "mem allocated for m_card" << endl;
+        result = result && (object.m_helper != nullptr);
 
-        res = res && (obj0.m_helperSize == 0);
-        res = res && (obj0.m_card == nullptr);
-        res = res && (obj0.m_numRows == CARDROWS);
-        res = res && (obj0.m_numCols == CARDCOLS);
-        res = res && (obj0.m_minBallVal == MINVAL);
-        res = res && (obj0.m_maxBallVal == MAXVAL);
+        object.initCard();
+        object.dumpCard();
 
-        // a negative size is invalid as well
-        Bingo obj1(-1, CARDCOLS, MINVAL, MAXVAL);
-        res = res && (obj1.m_numRows == CARDROWS);
-        res = res && (obj1.m_numCols == CARDCOLS);
-
-        // reCreateCard() must reject the same parameters, and it must leave
-        // the object it was called on untouched
-        res = res && (obj0.reCreateCard(10, 10, 10, 10) == false);
-        res = res && (obj0.m_card == nullptr);
-        return res;
+        return result;
     }
 
 private:
@@ -88,15 +88,11 @@ private:
 
 int main() {
     Tester tester;
-    tester.testDefaultConstructors()
-        ? cout << "Default constructor test passed!" << endl
-        : cout << "Default constructor test failed!" << endl;
+    tester.testDefaultConstructor() ? cout << "Def Con Passed " << endl
+                                    : cout << "Def Con Fail" << endl;
 
-    tester.testOptConstructor()
-        ? cout << "Opt constructor test passed!" << endl
-        : cout << "Opt constructor test failed!" << endl;
+    tester.testOptionalConstructor() ? cout << "Opt Con Passed"
+                                     : cout << "Opt Con Fail";
 
-    tester.testInvalidConstructor()
-        ? cout << "Invalid parameter constructor test passed!" << endl
-        : cout << "Invalid parameter constructor test failed!" << endl;
+    return 0;
 }

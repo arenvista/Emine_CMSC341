@@ -14,7 +14,7 @@ class Tester; // this is your tester class, you add your test functions in this
 const int CARDROWS  = 5;               // default number of rows
 const int CARDCOLS  = 5;               // default number of columns
 const int MINVAL    = 11;              // default min value in a cell
-const int MAXVAL    = 85;              // default max value in a cell
+const int MAXVAL    = 90;              // default max value in a cell
 const int EMPTYCELL = 99;              // empty cell (already drawn)
 const int BALLS = MAXVAL - MINVAL + 1; // the number of balls that we can draw
 
@@ -290,43 +290,17 @@ public:
     void dumpCard();
 
 private:
-    /* @brief use this to keep track & check if a col is complete
-     * arrays which can be used for keeping track of the number of empty cells
-     * in a row or in a column. An empty cell indicates that a ball with the
-     * same number has been drawn. After multiple ball drawing once there is a
-     * complete empty row or a complete empty column the game is finished */
+    // use this to keep track & check if a column is complete
     int *m_trackCols;
-
-    /* @brief use this to keep track & check if a row is complete
-     * arrays which can be used for keeping track of the number of empty cells
-     * in a row or in a column. An empty cell indicates that a ball with the
-     * same number has been drawn. After multiple ball drawing once there is a
-     * complete empty row or a complete empty column the game is finished */
+    // use this to keep track & check if a row is complete
     int *m_trackRows;
-
-    /* @brief The array to store cells in which index numbers are the cell
-     * values is an array that stores the information about all cells in the
-     * card. In fact we are storing every cell twice in two different data
-     * structure. We do this for efficiency (running time). Everytime a ball is
-     * drawn we look into m_helper to check whether the ball number exists in
-     * the card. The index numbers of this data structures are the ball numbers.
-     * This allows us to directly access a cell's information, e.g. if the drawn
-     * ball exists in the card what are the row and column number. */
+    // the array to store cells in which index numbers are the cell values
     Cell *m_helper;
     int   m_helperSize;
-
-    /* @brief the 2d structure to store card information
-     * 2D array which stores the information about every cell. Every cell
-     * is of the type Cell. The implementaion of the Cell class is provided.
-     * This member variable represents a bingo card in the game. The sizes of
-     * this data structure are specified by the member variables m_numRows and
-     * m_numCols. */
+    // the 2d structure to store card information
     Cell **m_card;
-
-    // the number of rows in the card
-    int m_numRows;
-    // the number of columns in the card
-    int m_numCols;
+    int    m_numRows;
+    int    m_numCols;
     // min value in a cell
     int m_minBallVal;
     // max value in a cell
@@ -335,65 +309,15 @@ private:
     /******************************************
      * Private function declarations go here! *
      ******************************************/
-
-    /**
-     * @brief Reports whether a row or a column of the card is complete.
-     *
-     * A row or a column is complete when all of its cells are empty, i.e.
-     * every ball number on it has been drawn.
-     *
-     * @return true if the card has a complete empty row or column,
-     *         false otherwise or if the object is empty
-     */
-    bool checkBingo();
-
-    /**
-     * @brief Empties the cell holding ballNum, if the card holds it.
-     *
-     * The ball number is looked up directly in m_helper. If the card holds
-     * the ball and the cell has not been emptied already, the cell is set to
-     * EMPTYCELL and the row and column counters are updated.
-     *
-     * @param ballNum the drawn ball number
-     * @return true if a cell was emptied, false otherwise
-     */
-    bool updateCard(int ballNum);
-
-    /**
-     * @brief Reports whether the given parameters describe a legal card.
-     *
-     * The card needs at least one cell, ball numbers cannot be negative
-     * because m_helper is indexed by them, the range needs a smaller min
-     * than max, the range must hold at least as many values as the card has
-     * cells since a value may not repeat on the card, and the range may not
-     * contain EMPTYCELL since that value marks a cell as already drawn.
-     *
-     * @param rows    the number of rows of the card
-     * @param columns the number of columns of the card
-     * @param min     the smallest value that can appear on the card
-     * @param max     the largest value that can appear on the card
-     * @return true if all requirements are satisfied, false otherwise
-     *
-     * @note static because it reads no member variable, which lets the
-     *       constructors call it before the members are initialized
-     */
-    static bool validParams(
+    bool validateParams(
         int rows,
         int columns,
         int min,
         int max
     );
+    bool checkBingo();
 
-    /**
-     * @brief Frees every array held by the object and nulls the pointers.
-     *
-     * Unlike clear() this leaves the size and range members untouched, so it
-     * can be used to release the old memory before allocating new memory for
-     * the same configuration.
-     *
-     * @return void
-     */
-    void deallocate();
+    bool updateCard(int ballNum);
 };
 
 // The following class is an auxiliary class to facilitate the random number
