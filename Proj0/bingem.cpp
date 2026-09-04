@@ -60,7 +60,7 @@ Bingo::Bingo(
             m_card[r][c].setCol(c);
         }
     }
-    m_helper = new Cell[max + 1];
+    m_helper = new Cell[m_helperSize];
 }
 
 bool Bingo::reCreateCard(
@@ -209,7 +209,7 @@ vector<int> Bingo::drawBalls() {
         return balls;
     }
     int expectedNumBalls = (m_maxBallVal - m_minBallVal + 1);
-    if (balls.size() == expectedNumBalls) {
+    if (balls.size() != expectedNumBalls) {
         Random R(m_minBallVal, m_maxBallVal, SHUFFLE);
         R.getShuffle(balls);
     }
@@ -240,15 +240,25 @@ int Bingo::play(
 
     for (unsigned int i = 0; i < rndBalls.size(); i++) {
         int ballVal = rndBalls[i];
-        if (m_helper[ballVal].getVal() == ballVal) {
-            // m_helper[i].setVal(EMPTYCELL);
-            row = m_helper[ballVal].getRow();
-            col = m_helper[ballVal].getCol();
-            m_card[row][col].setVal(EMPTYCELL);
-            m_trackRows[row] += 1;
-            m_trackCols[col] += 1;
-            numHits++;
+        for (int j = 0; j < m_helperSize; j++) {
+            if (m_helper[j].getVal() == ballVal) {
+                // m_helper[i].setVal(EMPTYCELL);
+                row = m_helper[j].getRow();
+                col = m_helper[j].getCol();
+                m_card[row][col].setVal(EMPTYCELL);
+                m_trackRows[row] += 1;
+                m_trackCols[col] += 1;
+                numHits++;
+            }
         }
+        // Debugging
+        cout << "Balls drawn: " << i << "\nBalls vector: ";
+        for (unsigned int j = 0; j < rndBalls.size(); j++) {
+            cout << "[" << rndBalls[j] << "], ";
+        }
+        cout << "\n Current Index: rndBalls[" << i << "] = " << rndBalls[i]
+             << endl;
+
         for (int i = 0; i < m_numRows; i++) {
             if (m_trackRows[i] == m_numRows) {
                 // BINGO
