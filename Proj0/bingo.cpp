@@ -1,6 +1,60 @@
 // UMBC - CMSC 341 - Fall 2026 - Proj0
 #include "bingo.h"
 
+bool Bingo::checkBingo() {
+    // an empty object has no card to win on
+    if (m_trackRows == nullptr || m_trackCols == nullptr) {
+        return false;
+    }
+
+    // Checking for wining conditions: row, and column hits (OMITING DIAGONALS)
+
+    // Check for row bingo
+    for (int i = 0; i < m_numRows; i++) {
+        if (m_trackRows[i] == m_numCols) {
+            return true;
+        }
+    }
+
+    // Check for column bingo
+    for (int i = 0; i < m_numCols; i++) {
+        if (m_trackCols[i] == m_numRows) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool Bingo::updateCard(int ballNum) {
+    // an empty object holds no cell to empty
+    if (m_card == nullptr || m_helper == nullptr) {
+        return false;
+    }
+    // a ball outside the range of the card is never on the card
+    if (ballNum < 0 || ballNum >= m_helperSize) {
+        return false;
+    }
+    // a negative row marks a helper slot that holds no cell of the card
+    if (m_helper[ballNum].getRow() < 0) {
+        return false;
+    }
+
+    int row = m_helper[ballNum].getRow();
+    int col = m_helper[ballNum].getCol();
+
+    // a repeated ball must not be counted, and must not push the row and
+    // column counters past the size of the card
+    if (m_card[row][col].getVal() == EMPTYCELL) {
+        return false;
+    }
+
+    m_card[row][col].setVal(EMPTYCELL);
+    m_trackRows[row]++;
+    m_trackCols[col]++;
+    return true;
+}
+
 Bingo::Bingo() {
     m_numRows    = CARDROWS;
     m_numCols    = CARDCOLS;
@@ -13,6 +67,35 @@ Bingo::Bingo() {
     m_helper     = nullptr;
 }
 
+bool Bingo::validParams(
+    int rows,
+    int columns,
+    int min,
+    int max
+) {
+    // a card needs at least one cell
+    if (rows <= 0 || columns <= 0) {
+        return false;
+    }
+    // m_helper is indexed by the ball number, so a ball number cannot be
+    // negative, and a range needs a smaller min than max
+    if (min < 0 || min >= max) {
+        return false;
+    }
+    // a ball number appears at most once on the card, so the range has to
+    // hold at least as many values as the card has cells
+    if (max - min + 1 < rows * columns) {
+        return false;
+    }
+    // EMPTYCELL marks a cell whose ball has been drawn, so it cannot also be
+    // a live value on the card: a cell holding it would read as drawn from
+    // the start and its row and column could never be completed
+    if (min <= EMPTYCELL && EMPTYCELL <= max) {
+        return false;
+    }
+    return true;
+}
+
 Bingo::Bingo(
     int rows,
     int columns,
@@ -21,18 +104,16 @@ Bingo::Bingo(
 ) {
     // cout << rows << columns << min << max << endl;
     // cout << validateParams(rows, columns, min, max) << endl;
-    if (!validateParams(rows, columns, min, max)) {
+    if (!validParams(rows, columns, min, max)) {
         m_numRows    = 0;
         m_numCols    = 0;
         m_minBallVal = 0;
         m_maxBallVal = 0;
         m_helperSize = 0;
-        m_trackCols  = new int[m_numCols];
-
-        m_trackRows = new int[m_numRows];
-
-        m_card   = nullptr;
-        m_helper = nullptr;
+        m_trackCols  = new int[m_numCols]();
+        m_trackRows  = new int[m_numRows]();
+        m_card       = nullptr;
+        m_helper     = nullptr;
         return;
     }
     m_numRows    = rows;
@@ -59,18 +140,16 @@ bool Bingo::reCreateCard(
     int min,
     int max
 ) {
-    if (!validateParams(rows, columns, min, max)) {
+    if (!validParams(rows, columns, min, max)) {
         m_numRows    = 0;
         m_numCols    = 0;
         m_minBallVal = 0;
         m_maxBallVal = 0;
         m_helperSize = 0;
-        m_trackCols  = new int[m_numCols];
-
-        m_trackRows = new int[m_numRows];
-
-        m_card   = nullptr;
-        m_helper = nullptr;
+        m_trackCols  = nullptr;
+        m_trackRows  = nullptr;
+        m_card       = nullptr;
+        m_helper     = nullptr;
         return false;
     }
 
@@ -250,107 +329,25 @@ const Bingo &Bingo::operator=(const Bingo &rhs) {
     m_trackRows  = new int[m_numRows];
     m_card       = new Cell *[m_numRows];
 
-    for (int r = 0; r < m_numRows; r++) {
+    for (int r = 0; r <= m_numRows; r++) {
         m_card[r] = new Cell[m_numCols];
-        for (int c = 0; c < m_numCols; c++) {
+        for (int c; c <= m_numCols; c++) {
             m_card[r][c] = rhs.m_card[r][c];
         }
     }
 
-    for (int i = 0; i < m_helperSize; i++) {
+    for (int i = 0; i <= m_helperSize; i++) {
         m_helper[i] = rhs.m_helper[i];
     }
 
-    for (int i = 0; i < m_numCols; i++) {
+    for (int i = 0; i <= m_numCols; i++) {
         m_trackCols[i] = rhs.m_trackCols[i];
     }
 
-    for (int i = 0; i < m_numRows; i++) {
+    for (int i = 0; i <= m_numRows; i++) {
         m_trackRows[i] = rhs.m_trackRows[i];
     }
     return *this;
-}
-
-bool Bingo::validateParams(
-    int rows,
-    int columns,
-    int min,
-    int max
-) {
-    // cout << rows << columns << min << max << endl;
-    if (min >= max) {
-        cout << "your max and min are likely flipped\n";
-        return false;
-    }
-    if (columns != 5) {
-        cout << "Failed Col Check \n";
-        return false;
-    } else if (rows < 2 || rows > 15) {
-        cout << "Failed Row Check";
-        return false;
-    } else if (((max - min + 1) % 5) != 0) {
-        int inner    = (max - min + 1);
-        int modCheck = inner % 5;
-        cout << "Fail Divisibility Check => " << max << " " << min << " \n";
-        cout << "Inner => " << inner << " modCheck => " << modCheck << "\n";
-        return false;
-    }
-    return true;
-}
-
-bool Bingo::updateCard(int ballNum) {
-    // an empty object holds no cell to empty
-    if (m_card == nullptr || m_helper == nullptr) {
-        return false;
-    }
-    // a ball outside the range of the card is never on the card
-    if (ballNum < 0 || ballNum >= m_helperSize) {
-        return false;
-    }
-    // a negative row marks a helper slot that holds no cell of the card
-    if (m_helper[ballNum].getRow() < 0) {
-        return false;
-    }
-
-    int row = m_helper[ballNum].getRow();
-    int col = m_helper[ballNum].getCol();
-
-    // a repeated ball must not be counted, and must not push the row and
-    // column counters past the size of the card
-    if (m_card[row][col].getVal() == EMPTYCELL) {
-        return false;
-    }
-
-    m_card[row][col].setVal(EMPTYCELL);
-    m_trackRows[row]++;
-    m_trackCols[col]++;
-    return true;
-}
-
-// Helper Function
-bool Bingo::checkBingo() {
-    // an empty object has no card to win on
-    if (m_trackRows == nullptr || m_trackCols == nullptr) {
-        return false;
-    }
-
-    // Checking for wining conditions: row, and column hits (OMITING DIAGONALS)
-
-    // Check for row bingo
-    for (int i = 0; i < m_numRows; i++) {
-        if (m_trackRows[i] == m_numCols) {
-            return true;
-        }
-    }
-
-    // Check for column bingo
-    for (int i = 0; i < m_numCols; i++) {
-        if (m_trackCols[i] == m_numRows) {
-            return true;
-        }
-    }
-
-    return false;
 }
 
 // The dump function renders the card in the terminal

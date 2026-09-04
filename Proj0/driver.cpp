@@ -46,8 +46,6 @@ private:
 };
 
 int main() {
-    cout << "Hello From Main\n";
-
     Tester      tester;
     Bingo       obj1(CARDROWS, CARDCOLS, MINVAL, MAXVAL);
     vector<int> balls = obj1.drawBalls();
