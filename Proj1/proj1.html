@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <title>Projects, CMSC 341 Projects &amp; Support</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/jumbotron/">
+    <link href="../../inc/styles.css" rel="stylesheet">
+    <script src="../../inc/functions.js"></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <a class="navbar-brand" href="https://www.umbc.edu"><img src="../../inc/UMBCretrievers_LOGO.jpg" width="40" hight="40"></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="../index.html">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="index.html">Projects</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../staff.html">TA Support</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../../res/resources.html">Resources</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../../res/faq.html">FAQ</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<main role="main">
+  <div class="" style="background-color: gainsboro;">
+    <div class="container" style="padding-top: 1.5em;padding-bottom: 0.5em;">
+      <h2 class="" >Project 1: List of Sparse Matrices - Fall 2026</h2>
+    </div>
+  </div> 
+
+  <div class="container">
+    <p style="height: 0.5em;"></p>
+    <div id="content">
+      <h2>Due: Tuesday Sep 29, before 9:00 pm</h2>
+      <div></div>
+
+      <h2 class="my-accordion">Objectives</h2>
+      <div>
+        <ul>
+          <li>Practice analyzing a project's requirements.</li>
+          <li>Implement an algorithm to compress sparse matrices.</li>
+          <li>Implementing a singly linked list.</li>
+          <li>Combining two data structures to satisfy a project's requirements.</li>
+          <li>Practice C++ dynamic memory management, i.e. avoiding memory leaks, avoiding double free, protection against wrong accesses in memory (segmentation fault), etc.</li>
+          <li>Practice writing test cases for a project.</li>
+        </ul>
+      </div>
+      
+      <h2 class="my-accordion">Introduction</h2> 
+      <div>
+        <p>
+          In many applications we need to use large matrices which most of their 
+          elements are zero. Such a matrix is called a sparse matrix. We do not need 
+          to store many zeros, because it consumes memory without being required.  
+          Researchers introduced formats to represent the sparse matrices without 
+          storing all zeros. One of the formats to represent sparse matrices is called 
+          Compressed Sparse Row (CSR). CSR format packs members of a matrix into an array. 
+          The following example shows how CSR is presenting a sparse matrix. The following example 
+          is from <a href="https://en.wikipedia.org/wiki/Sparse_matrix">Wikipedia</a>.
+        </p>
+        <div style="padding-left:20%;"><img src="proj1files/proj1-matrix.png" style="width:60%;"></div>
+        <p>
+          In the above matrix (4 x 6) we only need to store the non-zero values. 
+          We define three arrays, V stores the non-zero values, COL_INDEX stores 
+          column indices for the non-zero values respectively, and ROW_INDEX is described shortly after this. We can populate the 
+          arrays by scanning the matrix from left to right, row by row from top to bottom. 
+          Then, for the above example,
+        </p>
+        <pre class="code">
+            V = [ 10  20  30  40  50  60  70  80 ]
+    COL_INDEX = [ 0   1   1   3   2   3   4   5  ]
+        </pre>
+        <p>
+          The ROW_INDEX array stores the information as follows, in the first index it stores 0, in the second index it stores the cumulative number of non-zero elements from first row in the sparse matrix, that would be 2. 
+          One may note that there are two non-zero values in the first row of the sparse matrix. The ROW_INDEX array stores the value 4 in its third position since from row 0 to row 1 in the sparse matrix there are 4 non-zero values. 
+          In general the ROW_INDEX array stores at every i-th position the cumulative number of non-zero members from row 0 to row (i-th – 1) from the sparse matrix. One may note that the i-th positions start at 0.
+          This means at the last position of ROW_INDEX we store the total number of non-zero values.
+        </p>
+        <pre class="code">
+    ROW_INDEX = [ 0  2  4  7  8 ]
+        </pre>
+        <p>
+          The following presents how we access every individual member of the matrix. 
+          To extract the members of a row in matrix, we use the following calculations,
+        </p>
+        <pre class="code">
+    row_start = ROW_INDEX[row]
+    row_end   = ROW_INDEX[row + 1]
+        </pre>
+        <p>
+          For example, to extract members of row 2 from the sparse matrix, row_start would be 4 (ROW_INDEX[2] = 4), and row_end 
+          would be 7 (ROW_INDEX[2+1] = 7). We can find the members of row 2 from the sparse matrix in the array V. The indices 4 
+          to (7-1) are the non-zero values in the row 2 of matrix, i.e. 50, 60, and 70. 
+          For every one of those non-zero values we can find its column index in 
+          COL_INDEX. For example, the column index for 50 would be 2, and the column 
+          index for 70 would be 4. 
+        </p>
+        <p>
+          We can calculate the sparsity ratio for a matrix, which shows how sparse 
+          the matrix is. The number of zeros divided by the total number of members 
+          in a matrix shows the sparsity ratio. The sparsity ratio allows us to 
+          determine how efficient is the used data structure in regard to space (memory). 
+          In this project we convert the ratio into percentage, e.g. if the ratio 
+          is 0.656, we convert it to 0.656 x 100 = 65.
+        </p>
+      </div>
+
+      <h2 class="my-accordion">Assignment</h2>
+      <div>
+        <p>
+          Your assignment is to implement a linked list data structure with head pointer 
+          along with support for Compressed Sparse Row (CSR) objects.
+        </p>
+        <p>
+          For this project, you are provided with the skeleton .h files and a sample driver:
+        </p>
+        <p>
+          <ul>
+            <li><a href="proj1files/csr.h">csr.h</a> - Interface for the CSR and CSRList classes.</li>
+            <li><a href="proj1files/csr.cpp">csr.cpp</a> - The skeleton for the CSR and CSRList classes implementation.</li>
+            <li><a href="proj1files/driver.cpp">driver.cpp</a> - The sample driver/test program.</li>
+            <li><a href="proj1files/driver.txt">driver.txt</a> - The output of sample driver/test program. </li>
+          </ul>
+        </p>
+        <p>
+          You will implement the classes CSR and CSRList in <tt>csr.cpp</tt>.
+        </p>
+      </div>
+      
+      <h2 class="my-accordion">Specifications</h2>
+      <div>
+        <h4>The CSR Class</h4>
+        <p>
+          The CSR class has three member variables m_values, m_col_index, and m_row_index which can be used for storing the information about a sparse matrix according to the Compressed Sparse Row algorithm. One may refer to the Introduction section on this page for the details about the algorithm. 
+          The member variables in the CSR class require dynamic memory allocation. The CSR class has also a member variable m_next which points to the next CSR object in a linked list. The class CSR can be used as a node in a linked list.
+          The CSR class should not handle allocating or deallocating on its m_next member variable.
+        </p>
+        <p>
+          <div class="row">
+            <div class="col-md-6" style="border: 1px solid grey;font-weight: bold;">CSR::CSR()</div>
+            <div class="col-md-6" style="border: 1px solid grey; padding-left:2em;">
+              This is the default constructor. It creates an empty object. An empty object does not hold any memory. The constructor must initialize all member variables.
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6" style="border: 1px solid grey;font-weight: bold;">CSR::~CSR()</div>
+            <div class="col-md-6" style="border: 1px solid grey; padding-left:2em;">This is the destructor and it deallocates the memory.</div>
+          </div>
+          <div class="row">
+            <div class="col-md-6" style="border: 1px solid grey;font-weight: bold;">CSR::CSR(const CSR & rhs)</div>
+            <div class="col-md-6" style="border: 1px solid grey; padding-left:2em;">Copy constructor creates a deep copy of rhs.</div>
+          </div>
+        <div class="row">
+          <div class="col-md-6" style="border: 1px solid grey;font-weight: bold;">void CSR::compress(int m, int n, int array[], int arraySize)</div>
+          <div class="col-md-6" style="border: 1px solid grey; padding-left:2em;">
+            This function receives a sparse matrix in the form of an array and creates a compressed version of the sparse matrix.
+            All required memory allocation happens in this function. Since the function can be re-called on the same object the function needs to re-create new memory for the new sparse matrix that is passed to the function.
+            Moreover, the compress(...) function initializes all member variables.  
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6" style="border: 1px solid grey;font-weight: bold;">int CSR::getAt(int row, int  col) const</div>
+          <div class="col-md-6" style="border: 1px solid grey; padding-left:2em;">
+            Returns the value of the matrix member at indices row and col. If the requested indices do not exist (they are out of range) the function throws a runtime_error exception. 
+            The exception is defined in &lt;stdexcept&gt; library and is available from std namespace.</div>
+        </div>
+        <div class="row">
+          <div class="col-md-6" style="border: 1px solid grey;font-weight: bold;">int CSR::sparseRatio()</div>
+          <div class="col-md-6" style="border: 1px solid grey; padding-left:2em;">
+            Returns the sparsity ratio for the CSR object. 
+            It returns the ratio as percentage, e.g. if the ratio 
+            is 0.656, the function returns 0.656 x 100 = 65 as integer.
+            If the CSR object is empty this function returns zero. If all members of the matrix are zero the function returns 100.</div>
+        </div>
+        <div class="row">
+          <div class="col-md-6" style="border: 1px solid grey;font-weight: bold;">bool CSR::operator==(const CSR & rhs) const</div>
+          <div class="col-md-6" style="border: 1px solid grey; padding-left:2em;">Overloaded equality operator returns true if all members of two matrices are equal.</div>
+        </div>
+        <div class="row">
+          <div class="col-md-6" style="border: 1px solid grey;font-weight: bold;">void CSR::clear()</div>
+          <div class="col-md-6" style="border: 1px solid grey; padding-left:2em;">This function deallocates all memory and converts the object to an empty CSR object.</div>
+        </div>
+        <div class="row">
+          <div class="col-md-6" style="border: 1px solid grey;font-weight: bold;">bool CSR::empty() const</div>
+          <div class="col-md-6" style="border: 1px solid grey; padding-left:2em;">This function returns true if the object is empty, otherwise it returns false.</div>
+        </div>
+        </p>
+
+        <h4>The CSRList Class</h4>
+        <p>
+          The class CSRList implements a singly linked list in which nodes are of the type CSR.
+        </p>
+        <p>
+          <div class="row">
+            <div class="col-md-6" style="border: 1px solid grey;font-weight: bold;">CSRList::CSRList()</div>
+            <div class="col-md-6" style="border: 1px solid grey; padding-left:2em;">This is the default constructor. It creates an empty object. An empty object does not hold any memory. The constructor must initialize all member variables.</div>
+          </div>
+          <div class="row">
+            <div class="col-md-6" style="border: 1px solid grey;font-weight: bold;">CSRList::~CSRList()</div>
+            <div class="col-md-6" style="border: 1px solid grey; padding-left:2em;">This is the destructor and it deallocates the memory.</div>
+          </div>
+          <div class="row">
+            <div class="col-md-6" style="border: 1px solid grey;font-weight: bold;">CSRList::CSRList(const CSRList & rhs)</div>
+            <div class="col-md-6" style="border: 1px solid grey; padding-left:2em;">
+              Copy constructor creates a new CSRList object from rhs.<br/>
+              <b>Note:</b> If we use simply insertAtHead(...) to make insertion, the new list will be reversed.
+              That is not what we need. Copy constructor makes an exact copy of rhs, i.e. the order of the CSR objects should be the same as rhs.
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6" style="border: 1px solid grey;font-weight: bold;">const CSRList& CSRList::operator=(const CSRList & rhs)</div>
+            <div class="col-md-6" style="border: 1px solid grey; padding-left:2em;">The overloaded assignment operator creates an exact deep copy of the rhs object.</div>
+          </div>
+          <div class="row">
+            <div class="col-md-6" style="border: 1px solid grey;font-weight: bold;">bool CSRList::operator==(const CSRList & rhs) const</div>
+            <div class="col-md-6" style="border: 1px solid grey; padding-left:2em;">The overloaded equality operator returns true if both lists have the same matrices and in the same order, otherwise returns false.</div>
+          </div>
+          <div class="row">
+            <div class="col-md-6" style="border: 1px solid grey;font-weight: bold;">int CSRList::getAt(int CSRIndex, int row, int col) const</div>
+            <div class="col-md-6" style="border: 1px solid grey; padding-left:2em;">
+              This function returns the value of a matrix member with row and col indices, from the matrix 
+              at the position CSRIndex in the CSRList object. If the requested indices do not exist (they are out of range in the matrix or the matrix does not exist in the list) the function throws a runtime_error exception. The exception is defined in &lt;stdexcept&gt; library and is available from std namespace.</div>
+          </div>
+          <div class="row">
+            <div class="col-md-6" style="border: 1px solid grey;font-weight: bold;">int CSRList::averageSparseRatio()</div>
+            <div class="col-md-6" style="border: 1px solid grey; padding-left:2em;">
+              This function returns the average sparse ratio for all matrices stored in the CSRList object. 
+              It returns the ratio as percentage, e.g. if the ratio 
+              is 0.656, the function returns 0.656 x 100 = 65 as integer.</div>
+          </div>
+          <div class="row">
+            <div class="col-md-6" style="border: 1px solid grey;font-weight: bold;">void CSRList::insertAtHead(const CSR & matrix)</div>
+            <div class="col-md-6" style="border: 1px solid grey; padding-left:2em;">This function inserts the CSR object at the head of the CSRList object.</div>
+          </div>
+          <div class="row">
+            <div class="col-md-6" style="border: 1px solid grey;font-weight: bold;">void CSRList::clear()</div>
+            <div class="col-md-6" style="border: 1px solid grey; padding-left:2em;">This function resets the CSRList object to its initial, empty state.</div>
+          </div>
+          <div class="row">
+            <div class="col-md-6" style="border: 1px solid grey;font-weight: bold;">bool CSRList::empty() const</div>
+            <div class="col-md-6" style="border: 1px solid grey; padding-left:2em;">This function returns true if the list is empty, otherwise it returns false.</div>
+          </div>
+          </p>
+
+      </div>
+      
+      <h2 class="my-accordion">Additional Requirements</h2>
+      <div>
+        <ul>
+          <li>To build a matrix from the array, we use the row-by-row scanning pattern. For example, if the array is {0,1,0,0,0,0,0,2}, the indices 0 to 3 make the first row of the matrix, and the indices 4 to 7 make the second row of the matrix for a matrix of 2 x 4.</li>
+          <li>In constructing a CSR object, if the number of data members in the input array is less than (m x n), the function uses the array to initialize the matrix, and the rest of matrix members will be initialized to zero.</li>
+          <li>In constructing a CSR object, if the number of data members in the input array is greater than (m x n), the function uses the array to initialize the matrix, and the rest of array data will be ignored.</li>
+          <li>In constructing a CSR object, if the user decides to make a 0 x 0 matrix, that would be considered an empty object, even if user provides data in the array.</li>
+          <li>In constructing a CSR object, if user specifies the matrix size, but does not provide data in the array it would be considered a matrix with all members set to zero.</li>
+          <li>
+            The class declarations (<tt>CSR, CSRList</tt>) and
+            provided function implementations
+            in <a href="proj1files/csr.cpp"><tt>csr.cpp</tt></a> may not be
+            modified in any way.  No additional libraries may be used.
+          </li>
+          <li>You are not allowed to use STL template containers in the <tt>CSR</tt> and <tt>CSRList</tt> classes.</li>
+          <li>You are allowed to use STL template containers in your test functions.</li>
+          <li> The class functions must be written in <tt>csr.cpp</tt>; in particular, they must
+            not be written &ldquo;in-line.&rdquo;
+          </li>
+          <li>
+            Private helper functions may be added, but must be declared in the
+            private section of the <tt>CSR</tt> and <tt>CSRList</tt> classes.  There is a comment
+            indicating where private helper fuction declarations should be
+            written.
+          </li>
+        </ul>
+      </div>
+      
+      <h2 class="my-accordion">Testing</h2>
+      <div>
+        <ul>
+          <li>The test file name must be <tt>mytest.cpp</tt>; the file name must be in lower case, a file name like <tt>myTest.cpp</tt> is not acceptable. </li>
+          <li>The test file must contain the declaration and implementation of your <tt>Tester</tt> class and the <tt>main()</tt> function as well as all your test cases, i.e. calls to your test functions.</li>
+          <li>You are responsible for adequately testing your work before submission. The following section presents a non-exhaustive list of tests to perform on your implementation.</li>
+          <li>You must write a separate function for every test case.</li>
+          <li>Every test function must return true/false depending on passing or failing the test. Visual outputs are not accepted as test results.</li>
+          <li>The dump() function should not be called in the test functions. The dump() function is only provided to facilitate debugging.</li>
+          <li>Tests cannot be interactive. The test file <tt>mytest.cpp</tt> must compile and run to completion. </li>
+          <li>An example of declaring, implementing, and calling a test function, and outputting the test results was provided in the <tt>driver.cpp</tt> file of project 0.</li>
+          <li>The <a href="../../res/testing.html">testing guidelines</a> page provides information that helps you to write more effective test cases.</li>
+        </ul>
+        <p><b>Note:</b> Testing incrementally makes finding bugs easier. Once you finish a function and it is testable, make sure it is working correctly.</p>
+        <h4>Testing CSR Class</h4>
+        <p>
+          <ul>
+            <li>Test whether the compress(...) function works correctly for a normal case, e.g. it populates the member variables of the class with the expected values for an array of data.</li>
+            <li>Test whether the compress(...) function works correctly for an error case, e.g. the user provides data which is less than the asking matrix size.</li>
+            <li>Test whether the compress(...) function works correctly for an error case, e.g. the user asks for a 0 x 0 matrix but provides data. </li>
+            <li>Test whether the overloaded equality operator works correctly for a normal case.</li>
+            <li>Test whether the overloaded equality operator works correctly for an edge case, i.e. both objects are empty.</li>
+            <li>Test whether the getAt(...) function throws an exception for an error case, i.e. the requested index numbers do not exist in the matrix.</li>
+          </ul>
+        </p>
+        <h4>Testing CSRList Class</h4>
+        <p>
+          <ul>
+            <li>Test whether the overloaded assignment operator works correctly for a normal case.</li>
+            <li>Test whether the overloaded assignment operator works correctly for an edge case, e.g. the case of assigning an empty object to an object that contains data.</li>
+            <li>Test whether the getAt(...) function throws an exception for an error case, i.e. the list of matrices is empty.</li>
+            <li>Test whether the getAt(...) works correctly for a normal case, it returns the expected answer.</li>
+          </ul>
+        </p>
+        <h4>Testing For Memory Leaks / Memory Errors</h4>
+        <p>
+          <ul>
+            <li>Run your test program in valgrind; check that there are no memory leaks or errors. 
+              <br><b>Note:</b> If valgrind finds memory errors, compile your code with the -g option to enable debugging support and then re-run valgrind with the -s and --track-origins=yes options. valgrind will show you the line numbers where the errors are detected and can usually tell you which line is causing the error.</li>
+              <li>Never ignore warnings. They are a major source of errors in a program.</li>
+          </ul>
+        </p>
+      </div>
+      
+      <h2 class="my-accordion">What to Submit</h2>
+      <div>
+        <p>
+          You must submit the following files to the <tt>proj1</tt> submit
+          directory:
+        </p>
+        <ul>
+          <li> <tt>csr.h</tt> </li>
+          <li> <tt>csr.cpp</tt> </li>
+          <li> <tt>mytest.cpp</tt> (<b>Note: </b> This file contains the declaration and implementation of your Tester class as well as all your test cases.)</li>
+        </ul>
+        <p>
+          If you followed the instructions in the
+          <a href="../../res/submission.html">Project Submission</a> page to set up
+          your directories, you can submit your code using the following
+          command:
+        </P>
+        <pre class="code">   cp csr.h csr.cpp mytest.cpp ~/cs341proj/proj1/</pre>
+      </div>   
+      
+      <h2 class="my-accordion">Grading Rubric</h2>
+      <div>
+        <p>
+          For details of grading rubric please refer to <a href="../../res/grading.html">Project Grading Policy</a>
+        </p>
+      </div>
+    </div>  
+  <hr>
+</div>
+</main>
+<footer class="container">
+  <div class="float-left">
+    <p>CMSC 341</p>
+  </div>
+  <div class="float-right">
+    <p>
+      <a href="http://www.csee.umbc.edu/">CSEE</a> |
+      <a href="http://www.umbc.edu/">UMBC</a>
+    </p>
+  </div>
+</footer>
+</body>
+</html>
