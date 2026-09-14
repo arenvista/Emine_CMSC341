@@ -140,6 +140,7 @@ int main() {
     return 0;
 }
 
+// test default constructor and checks that member variables were set to default
 bool Tester::testDefaultConstructor() {
     Bingo object;
     bool  result = true;
@@ -156,11 +157,13 @@ bool Tester::testDefaultConstructor() {
     return result;
 }
 
+// this tests the optional constructor with a normal case
+// uses normal paremeters ad checks that variables were set to those values
+// Also checks that memory was allocated for necesary variables
 bool Tester::testOptionalConstructorOne() {
-    // egde?
     int   rows = 10;
     int   cols = 5;
-    int   max  = 90;
+    int   max  = 85;
     int   min  = 11;
     Bingo object(rows, cols, min, max);
     bool  result = true;
@@ -182,11 +185,14 @@ bool Tester::testOptionalConstructorOne() {
     return result;
 }
 
+// this tests the optional constructor with an edge case
+// uses edge paremeters ad checks that variables were set to those values
+// Also checks that memory was allocated for necesary variables
 bool Tester::testOptionalConstructorTwo() {
     // egde
     int   rows = 2;
     int   cols = 5;
-    int   max  = 90;
+    int   max  = 85;
     int   min  = 11;
     Bingo object(rows, cols, min, max);
     bool  result = true;
@@ -208,11 +214,13 @@ bool Tester::testOptionalConstructorTwo() {
     return result;
 }
 
+// this a construcor test with an error case
+// since parameters are invalid this test checks that object stays empty
 bool Tester::testOptionalConstructorThree() {
     // egde?
     int   rows = -5;
     int   cols = -10;
-    int   max  = 90;
+    int   max  = 85;
     int   min  = 11;
     Bingo object(rows, cols, min, max);
     bool  result = true;
@@ -234,11 +242,15 @@ bool Tester::testOptionalConstructorThree() {
     return result;
 }
 
+// this test recreateCard functionality for a normal case
+// parameters passed in are valid
+// this tests to make sure card is recreated with new values
+// card is orignally constructed with the global values
 bool Tester::testrecreateCardOne() {
     // egde?
     int   rows = 10;
     int   cols = 5;
-    int   max  = 90;
+    int   max  = 85;
     int   min  = 11;
     Bingo object(CARDROWS, CARDCOLS, MINVAL, MAXVAL);
     object.clear();
@@ -262,11 +274,15 @@ bool Tester::testrecreateCardOne() {
     return result;
 }
 
+// this test recreateCard functionality for a edge case
+// parameters passed in are valid
+// this tests to make sure card is recreated with new values
+// card is orignally constructed with the global values
 bool Tester::testrecreateCardTwo() {
     // egde?
     int   rows = 2;
     int   cols = 5;
-    int   max  = 90;
+    int   max  = 85;
     int   min  = 11;
     Bingo object(CARDROWS, CARDCOLS, MINVAL, MAXVAL);
     object.clear();
@@ -290,10 +306,15 @@ bool Tester::testrecreateCardTwo() {
     return result;
 }
 
+// this test recreateCard functionality for a normal case
+// parameters passed in are not valid
+// this tests to make sure card is not touched
+// but since this function is called with clear
+// object should now be empty since clear was called and card can't recreated
 bool Tester::testrecreateCardThree() {
     int   rows = -5;
     int   cols = -10;
-    int   max  = 90;
+    int   max  = 85;
     int   min  = 11;
     Bingo object(CARDROWS, CARDCOLS, MINVAL, MAXVAL);
     object.clear();
@@ -315,10 +336,14 @@ bool Tester::testrecreateCardThree() {
     return result;
 }
 
+// tests that InitCard works with normal case
+// in this test I check the bool results of init function for normal case
+// I also check that each value is in the correct range based on it's column
+// this check ensures that m_card was created correctly
 bool Tester::testInitCardOne() {
     int   rows = 5;
     int   cols = 5;
-    int   max  = 90;
+    int   max  = 85;
     int   min  = 11;
     Bingo object(rows, cols, min, max);
     bool  result;
@@ -344,10 +369,14 @@ bool Tester::testInitCardOne() {
     return result;
 }
 
+// tests that InitCard works with edge case
+// in this test I check the bool results of init function for edge case
+// I also check that each value is in the correct range based on it's column
+// this check ensures that m_card was created correctly
 bool Tester::testInitCardTwo() {
     int   rows = 2;
     int   cols = 5;
-    int   max  = 90;
+    int   max  = 85;
     int   min  = 11;
     Bingo object(rows, cols, min, max);
     bool  result;
@@ -372,6 +401,10 @@ bool Tester::testInitCardTwo() {
     return result;
 }
 
+// tests that InitCard works with error case
+// in this test I check the bool results of init function for error case
+// I also check that the card is empty because it can't be filled if its not
+// valid
 bool Tester::testInitCardThree() {
     int   rows = -5;
     int   cols = -10;
@@ -398,10 +431,15 @@ bool Tester::testInitCardThree() {
     return result;
 }
 
+// This tester check play with an normal case
+// I manuall fill the card wit the first column containing numbers
+// 11,12,13,14,15 in a row I then manually fill the vector for rndBalls with
+// 11,12,13,14,15 in a row in the front The play fucntion should return 5 since
+// it only takes 5 hits for a bingo
 bool Tester::testPlayOne() {
     int   rows = 5;
     int   cols = 5;
-    int   max  = 90;
+    int   max  = 85;
     int   min  = 11;
     Bingo object(rows, cols, min, max);
     bool  result;
@@ -444,6 +482,11 @@ bool Tester::testPlayOne() {
     return result;
 }
 
+// This tester check play with an edge case
+// I manuall fill the card wit the first column containing numbers 11,12 in a
+// row I then manually fill the vector for rndBalls with 11,12 in a row in the
+// front The play fucntion should return 2 since it only takes 2 hits for a
+// bingo
 bool Tester::testPlayTwo() {
     int   rows = 2;
     int   cols = 5;
@@ -491,10 +534,14 @@ bool Tester::testPlayTwo() {
     return result;
 }
 
+// This tester check play with an error case
+// I then manually fill the vector for rndBalls with balls in a row starting at
+// min The play fucntion should return 0 hits since object is empty because it
+// isn't valid
 bool Tester::testPlayThree() {
-    int   rows = 5;
-    int   cols = 5;
-    int   max  = 90;
+    int   rows = -5;
+    int   cols = -10;
+    int   max  = 85;
     int   min  = 11;
     Bingo object(rows, cols, min, max);
     bool  result;
@@ -518,10 +565,15 @@ bool Tester::testPlayThree() {
     return result;
 }
 
+// This tester check play with an error case
+// I manuall fill the card wit the first column containing numbers
+// 11,12,13,14,15 in a row I then manually fill the vector for rndBalls with
+// 11,12,13,14,15 The play fucntion should return 3 since the only number of
+// draws I allow is 3
 bool Tester::testPlayFour() {
     int   rows = 5;
     int   cols = 5;
-    int   max  = 90;
+    int   max  = 85;
     int   min  = 11;
     Bingo object(rows, cols, min, max);
     bool  result;
@@ -558,8 +610,11 @@ bool Tester::testPlayFour() {
     return result;
 }
 
+// this tester checks the aissignment operator with a normal case
+// after asignming an objet to another I go through each member variable, check
+// if they are =
 bool Tester::testAssignmentNormal() {
-    Bingo object1(5, 5, 11, 90);
+    Bingo object1(5, 5, 11, 85);
 
     object1.initCard();
 
@@ -592,10 +647,13 @@ bool Tester::testAssignmentNormal() {
     return result;
 }
 
+// this tester checks the aissignment operator with a edge case
+//  I set an  empty object equal to another
+// I go through each member variable andcheck if they are equal
 bool Tester::testAssignmentEdge() {
     int   rows = 5;
     int   cols = 5;
-    int   max  = 90;
+    int   max  = 85;
     int   min  = 11;
     Bingo object1(rows, cols, min, max);
 
@@ -603,7 +661,7 @@ bool Tester::testAssignmentEdge() {
 
     int   rows2 = -5;
     int   cols2 = -10;
-    int   max2  = 90;
+    int   max2  = 85;
     int   min2  = 11;
     Bingo object2(rows2, cols2, min2, max2);
 
@@ -635,10 +693,14 @@ bool Tester::testAssignmentEdge() {
     return result;
 }
 
+// this tester checks for self assignment with the aissignment operator
+// I used 2 variables, before and after to check that the cells are the same
+// they should be the same because self asighnment causes asignment operator to
+// return *this
 bool Tester::testSelfAssignment() {
     int   rows = 5;
     int   cols = 5;
-    int   max  = 90;
+    int   max  = 85;
     int   min  = 11;
     Bingo object1(rows, cols, min, max);
 
