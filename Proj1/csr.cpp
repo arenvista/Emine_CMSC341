@@ -3,6 +3,15 @@
 
 ///////////////CSR Class Implementation///////////////
 
+int CSR::getAt(
+    int matrix[],
+    int row,
+    int col
+) {
+    int index = row * m_n + col;
+    return matrix[index];
+}
+
 // Default constructor.
 //
 // Builds an EMPTY object, which the spec defines as one that holds no
