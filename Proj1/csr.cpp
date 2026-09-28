@@ -121,15 +121,15 @@ void CSR::compress(int m, int n, int array[], int arraySize){
 }
 int CSR::getAt(int row, int  col) const{
     if(m_values == nullptr){
-        throw::runtime_error("Matrix not iniatlized correctly");
+        throw std::runtime_error("Matrix not iniatlized correctly");
     }
 
     if( row >= m_m || row < 0){
-        throw::runtime_error("Row index is not in range");
+        throw std::runtime_error("Row index is not in range");
     }
 
     if( col >= m_n || col < 0){
-        throw::runtime_error("Col index is not in range");
+        throw std::runtime_error("Col index is not in range");
     }
 
     int row_start = m_row_index[row];
@@ -239,28 +239,40 @@ void CSRList::insertAtHead(const CSR & matrix){
 void CSRList::clear(){
     CSR* temp = m_head;
     CSR* next;
-    while( temp->m_next != nullptr){
-        next = temp->m_next;
-        delete temp;
-        temp = next;
+
+    while( temp != nullptr){
+            next = temp->m_next;
+            delete temp;
+            temp = next;
     }
-    delete temp;
     m_head = nullptr;
     m_size = 0;
+    
 }
 
 int CSRList::getAt(int CSRIndex, int row, int col) const{
     CSR* current = m_head;
     int numResult;
-    // IS LINKED LIST 0 INDEXED?!?!?!? IF SO FIXXXXXX
-    if(CSRIndex > m_size){
+   
+    if(m_size == 0){
+  
         //cout << CSRIndex << endl;
         //cout << m_size << endl;
-        throw::runtime_error("Object is not in the list!");
+        throw std::runtime_error("List is empty");
+  
+    }
+    //IS CSRLIST 0 INDEXED?!?!
+    if(CSRIndex >= m_size || CSRIndex < 0){
+        //cout << CSRIndex << endl;
+        //cout << m_size << endl;
+        throw std::runtime_error("Object is not in the list!");
     }
 
     for (int i = 0; i < CSRIndex; i++){
         current = current->m_next;
+        if (current == nullptr){
+            throw std::runtime_error("object is empty");
+        }
     }
     numResult = current->getAt(row, col);
     return numResult;
@@ -290,7 +302,11 @@ const CSRList& CSRList::operator=(const CSRList & rhs){
         return *this;
     }
 
-    clear();
+    if ( this->m_head != nullptr){
+        clear();
+    }
+
+    m_size = rhs.m_size;
 
     if (rhs.m_head == nullptr){
         m_head = nullptr;
@@ -309,6 +325,7 @@ const CSRList& CSRList::operator=(const CSRList & rhs){
 
     return *this;
 }
+
 int CSRList::averageSparseRatio(){
     CSR* curCsr = m_head;
 
