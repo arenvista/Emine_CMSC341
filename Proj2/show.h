@@ -67,6 +67,7 @@ class Drone{
     void setHeight(int height){m_height=height;}
     void setLeft(Drone* left){m_left=left;}
     void setRight(Drone* right){m_right=right;}
+
     
     private:
     int m_id;
@@ -107,15 +108,24 @@ class Group{ // this is an AVL tree, the nodes are of type Drone
     // ***************************************************
     // Any private helper functions must be delared here!
     // ***************************************************
-    Drone* insert(Drone* drone, const Drone& newDrone);
-    Drone* remove(Drone* drone, int id);
+    Drone * insert(Drone* drone, const Drone& newDrone);
+    Drone * remove(Drone* drone, int id);
+    int height(Drone* drone);
     void updateHeight(Drone* drone);
     int balanceFactor(Drone* drone);
-    Drone* rebalanceDrone(Drone* drone);
+    Drone* rebalanceTree(Drone* drone);
     Drone* right(Drone* drone);
     Drone* left(Drone* drone);
     void clear(Drone * drone);
     Drone* findDrone(Drone* n, int id) const;
+    Drone* minDrone(Drone* drone);
+    int traverseInOrderColor(Drone* drone, LIGHTCOLOR color) const;
+    int traverseInOrderState(Drone* drone, STATE state) const;
+    void listDrone(Drone* drone) const;
+    //Drone * removeDead(Drone * drone);
+    int countDrones(Drone * drone);
+    void fillIDArray(Drone * drone, int arr[], int &deadDrones);
+
 
 };
 
@@ -140,6 +150,10 @@ class Show{ // this is a splay tree, the nodes are of type Group
     // ***************************************************
     // Any private helper functions must be delared here!
     // ***************************************************
+    void clear(Group * group);
+    Group * left(Group * group);
+    Group * right(Group * group);
+    Group * splay(Group * group, int id);
 
 };
 #endif

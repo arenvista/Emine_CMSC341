@@ -94,6 +94,9 @@ int main(){
                         static_cast<LIGHTCOLOR>(typeGen.getRandNum()),
                         static_cast<STATE>(stateGen.getRandNum()));
             group.insert(drone);
+            // cout << "Node " << i << " added:" << endl;
+            // group.dumpTree();
+            // cout << endl;
         }
         cout << "\nDump after inserting " << groupSize << " nodes:\n\n";
         group.dumpTree();
@@ -113,16 +116,16 @@ int main(){
         cout<< "\nConstructing a show tree ..." << endl;
         Show aShow;
         
-        for (int i=0; i<10; i++){
-            Drone drones[10];
-            int groupSize = 1;
+        for (int i=0; i<50; i++){
+            Drone drones[50];
+            int groupSize = 50;
             for(int i=0;i<groupSize;i++){
                 Drone drone(idGen.getRandNum(),
                             static_cast<LIGHTCOLOR>(typeGen.getRandNum()),
                             static_cast<STATE>(stateGen.getRandNum()));
                 drones[i] = drone;
             }
-            aShow.insert(idGen.getRandNum(), drones, 10);
+            aShow.insert(idGen.getRandNum(), drones, 50);
         }
         cout << "\nDump of the show tree:\n" << endl;
         aShow.dump();
