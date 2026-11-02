@@ -1,0 +1,53 @@
+Creating 10 hospitals and adding them to the system:
+Hospital Priority: 19
+Hospital 19: => ((((104:860958)89:445354)80:717842)75:981168(87:543713))
+Hospital Priority: 14
+Hospital 14: => (((107:399742)100:208446)88:205596((105:904337)99:633661))
+Hospital Priority: 25
+Hospital 25: => (((100:810913)92:895722((106:240297)95:378386))79:852107)
+Hospital Priority: 10
+Hospital 10: => (((101:280464)89:203953)77:345157((84:980681)80:940037))
+Hospital Priority: 27
+Hospital 27: => (((91:525506)90:619532)79:675884((91:922617)81:631579))
+Hospital Priority: 26
+Hospital 26: => (((101:649839)98:312660)85:424809((102:845317)91:703826))
+Hospital Priority: 27
+Hospital 27: => (((92:444474)81:374446)76:574566((110:570071)81:500116))
+Hospital Priority: 18
+Hospital 18: => ((((102:792061)96:805919(98:313646))86:363511)76:161215)
+Hospital Priority: 19
+Hospital 19: => (((104:856365)91:491712)90:885055((102:861154)97:763642))
+Hospital Priority: 10
+Hospital 10: => (((101:673724)101:304894)97:953797((109:128179)100:655834))
+
+Checking the tree of hospitals:
+((((19)18(19))10((27)14))10((26)25(27)))
+
+Get the highest priority hospital:
+
+Hospital 10: => (((101:280464)89:203953)77:345157((84:980681)80:940037))
+
+Get the 3rd highest priority hospital:
+
+Hospital 18: => ((((102:792061)96:805919(98:313646))86:363511)76:161215)
+
+Checking the tree of hospitals:
+
+((((27)19)14(27))10((26)19(25)))
+Changing the priority function in the highest priority hospital:
+
+Get the highest priority hospital, it must be a max heap now:
+
+Hospital 10: => (((169:673724)212:304894((156:655834)158:953797))231:128179)
+
+Get the highest priority hospital, this one be a min heap:
+
+Hospital 14: => (((107:399742)100:208446)88:205596((105:904337)99:633661))
+
+Preorder traversal of the nodes in the highest priority hospital:
+Contents of the queue:
+[88] Patient ID: 205596, blood pressure: 99, temperature: 36
+[100] Patient ID: 208446, blood pressure: 110, temperature: 40
+[107] Patient ID: 399742, blood pressure: 143, temperature: 39
+[99] Patient ID: 633661, blood pressure: 78, temperature: 38
+[105] Patient ID: 904337, blood pressure: 70, temperature: 36
