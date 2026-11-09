@@ -140,77 +140,127 @@ int priorityFn2(const Patient &patient);// works with a MINHEAP
 
 class Tester{
     public:
+
+    bool testInsertMIN();//done
+    bool testInsertMAX();//done
+    bool testRemovalMIN();//done
+    bool testRemovalMAX();//done
+    bool testNPLVals();//done
+    bool testLeftistProper();//done
+    bool testChangingPriorFunc();//done
+    bool testMergeOnEmptyQue();//done
+    bool testHospitalCCNormal();//done
+    bool testHospitalCCEdge();//done
+    bool testHospitalAONormal();//done
+    bool testHospitalAOEdge();//done
+    bool testEmptyDequeue();//do
+    bool testIncompatibleMerge();//do
+
     private:
+    int countNodes(Patient * root);
+    bool isHeapOrdered(Patient * root, prifn_t priFn, HEAPTYPE heapType);
+    bool idUsed(int id[], int size, int idNum);
+    void uniqueIDGen(int id[], int size, int min, int max);
+    bool insertPatients(Hospital & hospital, int size);
+
+    bool testNPLVals(Patient * root);
+    int calcNPL(Patient * root);
+    bool testLeftist(Patient * root);
+    void collectNodes(Patient * nodes[], Patient * root, int & numNodes);
+    bool doesPointerExist(Patient * nodes[], Patient * pointer, int & numNodes);
+    bool testTreeEquality(Patient * treeOne, Patient * treeTwo);
+
+
 };
 
 int main(){
-    Random hospitalGen(10,30); // this generates same priority numbers too
-    Random rndHospitalID(HOSPITALMINID, HOSPITALMAXID);
-    Random patientIDGen(MINPATIENTID,MAXPATIENTID);
-    Random BPGen(MINBP,MAXBP);
-    Random RRGen(MINRR,MAXRR);
-    Random oxygenGen(MINOX,MAXOX);
-    Random opinionGen(MINOPINION,MAXOPINION);
-    Random temperatureGen(MINTEMP,MAXTEMP);
+
+    Tester tester;
     
-    // create a queue of multiple hospitals
-    Region hospitalsQueue(20);
+    cout << "Test insertion for a normal case of min-heap." << endl;
 
-    cout << "Creating 10 hospitals and adding them to the system:" << endl;
-    for (int j=0;j<10;j++){
-        int rndHospital = hospitalGen.getRandNum(); // generating priority for hospitals
-        int hospitalID = rndHospitalID.getRandNum();
-        // create a Hospital object
-        Hospital aHospital(priorityFn2, MINHEAP, SKEW, rndHospital, hospitalID);
-        
-        for (int i=0;i<5;i++){
-            // create multiple Patient objects
-            Patient aPatient(patientIDGen.getRandNum(),
-                            temperatureGen.getRandNum(),
-                            oxygenGen.getRandNum(), RRGen.getRandNum(),
-                            BPGen.getRandNum(), opinionGen.getRandNum()
-                            );
-            // insert orders into hospital
-            aHospital.insertPatient(aPatient);
-        }
-        cout << "Hospital Priority: " << rndHospital << endl;
-        aHospital.dump();
-        // insert hospital into hospitals queue
-        hospitalsQueue.addHospital(aHospital);
-    }
+    tester.testInsertMIN() ? cout << "Passed " << endl
+                                    : cout << "Fail" << endl;
 
     cout << endl;
-    cout << "Checking the tree of hospitals:" << endl;
-    hospitalsQueue.dump();
 
-    Hospital highPrioHospital;
+    cout << "Test insertion for a normal case of max-heap." << endl;
 
-    cout << endl << "Get the highest priority hospital:" << endl;
-    hospitalsQueue.getHospital(highPrioHospital);
-    cout << endl; highPrioHospital.dump();
-
-    cout << endl << "Get the 3rd highest priority hospital:" << endl;
-    hospitalsQueue.getNthHospital(highPrioHospital, 3);
-    cout << endl; highPrioHospital.dump();
-
-    cout << endl << "Checking the tree of hospitals:" << endl;
-    cout << endl; hospitalsQueue.dump();
-
-    cout << "Changing the priority function in the highest priority hospital:" << endl;
-    hospitalsQueue.setPriorityFn(priorityFn1, MAXHEAP, 1);
-
-    cout << endl << "Get the highest priority hospital, it must be a max heap now:" << endl;
-    hospitalsQueue.getHospital(highPrioHospital);
-    cout << endl; highPrioHospital.dump();
-
-    cout << endl << "Get the highest priority hospital, this one be a min heap:" << endl;
-    hospitalsQueue.getHospital(highPrioHospital); 
-    cout << endl; highPrioHospital.dump();
-
-    cout << "\nPreorder traversal of the nodes in the highest priority hospital:\n";
-    highPrioHospital.printPatientQueue();
+    tester.testInsertMAX() ? cout << "Passed " << endl
+                                    : cout << "Fail" << endl;
 
     cout << endl;
+
+    cout << "Test removal for a normal case of min-heap." << endl;
+
+    tester.testRemovalMIN() ? cout << "Passed " << endl
+                                    : cout << "Fail" << endl;
+
+    cout << endl;
+
+    cout << "Test removal for a normal case of max-heap." << endl;
+
+    tester.testRemovalMAX() ? cout << "Passed " << endl
+                                    : cout << "Fail" << endl;
+
+    cout << endl;
+
+    cout << "Test all nodes in a leftist heap have the correct NPL value." << endl;
+
+    tester.testNPLVals() ? cout << "Passed " << endl
+                                    : cout << "Fail" << endl;
+
+    cout << endl;
+
+    cout << "Test a leftist heap preserves the property of such a heap" << endl;
+
+    tester.testLeftistProper() ? cout << "Passed " << endl
+                                    : cout << "Fail" << endl;
+
+    cout << endl;
+
+    cout << "Test changing the priority function" << endl;
+
+    tester.testChangingPriorFunc() ? cout << "Passed " << endl
+                                    : cout << "Fail" << endl;
+
+    cout << endl;
+
+    cout << "Test merge of an empty queue (an edge case) with a normal queue" << endl;
+
+    tester.testMergeOnEmptyQue() ? cout << "Passed " << endl
+                                    : cout << "Fail" << endl;
+
+    cout << endl;
+
+    cout << "Test the Hospital class copy constructor for a normal case" << endl;
+
+    tester.testHospitalCCNormal() ? cout << "Passed " << endl
+                                    : cout << "Fail" << endl;
+
+    cout << endl;
+
+    cout << "Test the Hospital class copy constructor for a edge case" << endl;
+
+    tester.testHospitalCCEdge() ? cout << "Passed " << endl
+                                    : cout << "Fail" << endl;
+
+    cout << endl;
+
+    cout << "Test the Hospital class asignment operator for a normal case" << endl;
+
+    tester.testHospitalAONormal() ? cout << "Passed " << endl
+                                    : cout << "Fail" << endl;
+
+    cout << endl;
+
+    cout << "Test the Hospital class asignment operator for a edge case" << endl;
+
+    tester.testHospitalAOEdge() ? cout << "Passed " << endl
+                                    : cout << "Fail" << endl;
+
+    cout << endl;
+
     return 0;
 }
 
@@ -236,4 +286,697 @@ int priorityFn2(const Patient &patient) {
     //the smaller value means the higher priority
     int priority = patient.getOpinion() + patient.getOxygen();
     return priority;
+}
+
+bool Tester::idUsed(int id[], int size, int idNum){
+
+    for (int i = 0; i < size; i++){
+
+        if (id[i] == idNum){
+            return false; 
+        }
+
+    }
+    return true;
+}
+
+void Tester::uniqueIDGen(int id[], int size, int min, int max){
+    Random idGenerator(min, max);
+
+    int usedID = 0;
+
+    while (usedID < size){
+        int idNum = idGenerator.getRandNum();
+
+        if (idUsed(id, usedID, idNum) != false){
+            id[usedID] = idNum;
+            usedID ++;
+        }
+    }
+
+}
+
+bool Tester::insertPatients(Hospital & hospital, int size){
+    int * patientIds = new int[size];
+    uniqueIDGen(patientIds, size, MINPATIENTID, MAXPATIENTID);
+
+    Random BPGen(MINBP,MAXBP);
+    Random RRGen(MINRR,MAXRR);
+    Random oxygenGen(MINOX,MAXOX);
+    Random opinionGen(MINOPINION,MAXOPINION);
+    Random temperatureGen(MINTEMP,MAXTEMP);
+
+    for (int i = 0; i < size; i++){
+        Patient newPatient(patientIds[i], temperatureGen.getRandNum(),
+         oxygenGen.getRandNum(), RRGen.getRandNum(), BPGen.getRandNum(), opinionGen.getRandNum());
+        
+        if (hospital.insertPatient(newPatient) != true){
+            delete [] patientIds;
+            return false;
+
+        }
+    }
+
+    delete [] patientIds;
+    return true;
+}
+
+int Tester::countNodes(Patient * root){
+    if (root == nullptr){
+        return 0; 
+    }
+
+    return 1 + countNodes(root->m_left) + countNodes(root->m_right);
+    
+}
+
+bool Tester::isHeapOrdered(Patient * root, prifn_t priFn, HEAPTYPE heapType){
+
+    if (root == nullptr){
+        return true; 
+    }
+
+    int parentPrio = priFn(*root);
+
+    if (root->m_left != nullptr){
+
+        int leftPrio = priFn(*(root->m_left));
+
+        if( (heapType == MINHEAP && parentPrio > leftPrio) || (heapType == MAXHEAP && parentPrio < leftPrio )){
+            return false; 
+        }
+    }
+
+    if (root->m_right != nullptr){
+
+        int rightPrio = priFn(*(root->m_right));
+
+        if( (heapType == MINHEAP && parentPrio > rightPrio) || (heapType == MAXHEAP && parentPrio < rightPrio )){
+            return false; 
+        }
+    }
+
+    return true; 
+}
+
+int Tester::calcNPL(Patient * root){
+
+    if (root == nullptr){
+        return -1;
+    }
+
+    int leftNPL = calcNPL(root->m_left);
+
+    int rightNPL = calcNPL(root->m_right);
+
+    if (rightNPL < leftNPL){
+        return rightNPL + 1;
+    }
+
+    return leftNPL + 1; 
+}
+
+bool Tester::testNPLVals(Patient * root){
+
+    if (root == nullptr){
+        return true;
+    }
+
+    if  (root->m_npl != calcNPL(root)){
+        return false;
+    }
+
+    if (testNPLVals(root->m_left) == false){
+        return false; 
+    }
+
+    
+    if (testNPLVals(root->m_right) == false){
+        return false; 
+    }
+
+    return true; 
+
+}
+
+bool Tester::testLeftist(Patient * root){
+    if (root == nullptr){
+        return true; 
+    }
+
+    int leftNPL = -1;
+    int rightNPL = -1;
+
+    if (root->m_left != nullptr){
+        leftNPL = root->m_left->m_npl;
+    }
+
+    if (root->m_right != nullptr){
+        rightNPL = root->m_right->m_npl;
+    }
+
+    if (rightNPL > leftNPL){
+        return false; 
+    }
+
+    if (testLeftist(root->m_left) != true){
+        return false; 
+    }
+    if (testLeftist(root->m_right) != true){
+        return false; 
+    }
+
+    return true; 
+}
+
+void Tester::collectNodes(Patient * nodes[], Patient * root, int & numNodes){
+    
+    if (root != nullptr){
+        nodes[numNodes] =  root;
+        numNodes++;
+
+        collectNodes(nodes, root->m_left, numNodes);
+        collectNodes(nodes, root->m_right, numNodes);
+    }
+}
+
+bool Tester::doesPointerExist(Patient * nodesBefore[], Patient * pointerNode, int & numNodes){
+
+    for (int i = 0; i < numNodes; i++){
+        if (nodesBefore[i] == pointerNode){
+            return true; 
+        }
+    }
+
+    return false; 
+}
+
+bool Tester::testTreeEquality(Patient * treeOne, Patient * treeTwo){
+
+    if (treeOne == nullptr){
+        if (treeTwo != nullptr){
+            return false;
+        }
+
+        return true; 
+    }
+
+    if ((treeOne->m_BP != treeTwo->m_BP) || (treeOne->m_npl != treeTwo->m_npl) || (treeOne->m_opinion != treeTwo->m_opinion) ||
+        (treeOne->m_oxygen != treeTwo->m_oxygen) || (treeOne->m_patient!= treeTwo->m_patient) ||
+        (treeOne->m_RR != treeTwo->m_RR) || (treeOne->m_temperature != treeTwo->m_temperature)){
+        return false;
+    }
+
+    if (testTreeEquality(treeOne->m_left, treeTwo->m_left) != true){
+        return false;
+    }
+
+    if (testTreeEquality(treeOne->m_right, treeTwo->m_right) != true){
+        return false;
+    }
+
+    return true;
+
+}
+
+
+/*
+Test insertion for a normal case of min-heap.
+After a decent number of insertion (e.g. 300 nodes) we traverse the tree
+and check that the heap property is satisfied at every node
+*/
+
+bool Tester::testInsertMIN(){
+    int size = 300;
+    Hospital hospital(priorityFn2, MINHEAP, SKEW, 10, 100001);
+
+
+    if (insertPatients(hospital, size) != true){
+        return false; 
+    }
+
+    if (hospital.m_size != 300){
+        return false; 
+    }
+
+    if (countNodes(hospital.m_heap) != 300){
+        return false; 
+    }
+
+    if (isHeapOrdered(hospital.m_heap, hospital.getPriorityFn(), hospital.m_heapType) != true){
+        return false; 
+    }
+
+    return true; 
+}
+
+/*
+Test insertion for a normal case of max-heap.
+After a decent number of insertion (e.g. 300 nodes) we traverse the tree
+and check that the heap property is satisfied at every node.
+*/
+
+bool Tester::testInsertMAX(){
+    int size = 300;
+    Hospital hospital(priorityFn1, MAXHEAP, SKEW, 10, 100001);
+
+
+    if (insertPatients(hospital, size) != true){
+        return false; 
+    }
+
+    if (hospital.m_size != 300){
+        return false; 
+    }
+
+    if (countNodes(hospital.m_heap) != 300){
+        return false; 
+    }
+
+    if (isHeapOrdered(hospital.m_heap, hospital.getPriorityFn(), hospital.m_heapType) != true){
+        return false; 
+    }
+
+    return true; 
+}
+
+/*
+Test removal for a normal case of min-heap.
+After a decent number of insertion (e.g. 300 nodes)
+we check whether all removals happen in the correct patient.
+*/
+
+bool Tester::testRemovalMIN(){
+    int size = 300;
+    Hospital hospital(priorityFn2, MINHEAP, SKEW, 10, 100001);
+
+
+    if (insertPatients(hospital, size) != true){
+        return false; 
+    }
+
+    Patient curPatient = hospital.getNextPatient();
+    int prevPatientPrio = priorityFn2(curPatient);
+
+    for (int i = 1; i < size; i++ ){
+
+        curPatient = hospital.getNextPatient();
+        int curPatientPrio = priorityFn2(curPatient);
+
+        if(curPatientPrio < prevPatientPrio){
+            return false;
+        }
+
+        prevPatientPrio = curPatientPrio;
+    }
+
+    if (hospital.m_size != 0){
+        return false; 
+    }
+
+    return true; 
+
+}
+
+/*
+Test removal for a normal case of max-heap.
+After a decent number of insertion (e.g. 300 nodes)
+we check whether all removals happen in the correct patient.
+*/
+
+bool Tester::testRemovalMAX(){
+    int size = 300;
+    Hospital hospital(priorityFn1, MAXHEAP, SKEW, 10, 100001);
+
+
+    if (insertPatients(hospital, size) != true){
+        return false; 
+    }
+
+    Patient curPatient = hospital.getNextPatient();
+    int prevPatientPrio = priorityFn1(curPatient);
+
+    for (int i = 1; i < size; i++ ){
+
+        curPatient = hospital.getNextPatient();
+        int curPatientPrio = priorityFn1(curPatient);
+
+        if(curPatientPrio > prevPatientPrio){
+            return false;
+        }
+
+        prevPatientPrio = curPatientPrio;
+    }
+
+    if (hospital.m_size != 0){
+        return false; 
+    }
+
+    return true; 
+}
+
+/*
+Test all nodes in a leftist heap have the correct NPL value.
+*/
+
+
+bool Tester::testNPLVals(){
+
+    int size = 300;
+    Hospital hospital(priorityFn2, MINHEAP, LEFTIST, 10, 100001);
+
+
+    if (insertPatients(hospital, size) != true){
+        return false; 
+    }
+
+    if (hospital.m_size != 300){
+        return false; 
+    }
+
+    if (countNodes(hospital.m_heap) != 300){
+        return false; 
+    }
+
+    if (testNPLVals(hospital.m_heap) != true){
+        return false; 
+    }
+
+    return true;
+}
+
+/*
+Test a leftist heap preserves the property of such a heap,
+i.e. at every node the NPL value of the left child is greater
+than or equal to the NPL value of the right child. 
+*/
+
+bool Tester::testLeftistProper(){
+
+    int size = 300;
+    Hospital hospital(priorityFn2, MINHEAP, LEFTIST, 10, 100001);
+
+
+    if (insertPatients(hospital, size) != true){
+        return false; 
+    }
+
+    if (hospital.m_size != 300){
+        return false; 
+    }
+
+    if (countNodes(hospital.m_heap) != 300){
+        return false; 
+    }
+
+    if(testLeftist(hospital.m_heap) != true){
+        return false; 
+    }
+
+    return true;
+}
+
+/*
+Test whether after changing the priority
+function a correct heap is rebuilt with the same data (nodes) and the different priority function.
+*/
+
+bool Tester::testChangingPriorFunc(){
+    int size = 150;
+    Hospital hospital(priorityFn2, MINHEAP, LEFTIST, 10, 100001);
+
+
+    if (insertPatients(hospital, size) != true){
+        return false; 
+    }
+
+    Patient * nodesBefore[150];
+    int numNodesBefore = 0;
+    collectNodes(nodesBefore, hospital.m_heap, numNodesBefore);
+
+    if (numNodesBefore != 150){
+        return false; 
+    }
+
+    hospital.setPriorityFn(priorityFn1, MAXHEAP);
+
+
+    Patient * nodesAfter[150];
+    int numNodesAfter = 0;
+    collectNodes(nodesAfter, hospital.m_heap, numNodesAfter);
+
+   
+    if (numNodesAfter != 150){
+      return false; 
+    }
+
+   
+    if (hospital.getPriorityFn() != priorityFn1){
+        return false;
+    }
+
+    
+    if (hospital.getHeapType() != MAXHEAP){
+        return false;
+    }
+    if (hospital.m_size != 150){
+        return false; 
+    }
+
+    if (isHeapOrdered(hospital.m_heap, priorityFn1, MAXHEAP) != true){
+        return false; 
+    }
+
+    for (int i = 0; i < numNodesAfter; i++){
+        if (doesPointerExist(nodesAfter, nodesBefore[i], numNodesAfter) == false){
+            return false; 
+        }
+    }
+
+    return true;
+}
+
+/*
+Test merge of an empty queue (an edge case) with a normal queue.
+This is a call to the function Hospital::mergeWithQueue(Hospital& rhs)
+where rhs is a normally populated queue.
+*/
+
+bool Tester::testMergeOnEmptyQue(){
+    int size = 150;
+    Hospital hospitalFilled(priorityFn2, MINHEAP, LEFTIST, 10, 100001);
+
+
+    if (insertPatients(hospitalFilled, size) != true){
+        return false; 
+    }
+    
+    int sizeEmpty = 0;
+    Hospital hospitalEmpty(priorityFn2, MINHEAP, LEFTIST, 10, 100002);
+
+
+    if (insertPatients(hospitalEmpty, sizeEmpty) != true){
+        return false; 
+    }
+
+    hospitalEmpty.mergeWithQueue(hospitalFilled);
+
+    if (hospitalEmpty.m_size != 150){
+        return false; 
+    }
+
+    if (hospitalFilled.m_size != 0){
+        return false;
+    }
+
+        if (hospitalFilled.m_heap != nullptr){
+        return false;
+    }
+    
+    if (countNodes(hospitalEmpty.m_heap) != 150){
+        return false; 
+    }
+
+    if (countNodes(hospitalFilled.m_heap) != 0){
+        return false;
+    }
+
+    if (isHeapOrdered(hospitalEmpty.m_heap, hospitalEmpty.getPriorityFn(), hospitalEmpty.m_heapType) != true){
+        return false; 
+    }
+
+    return true; 
+    
+}
+
+/*
+Test the Hospital class copy constructor for a normal case.
+*/
+
+bool Tester::testHospitalCCNormal(){
+
+    int size = 250;
+    Hospital hospitalOne(priorityFn2, MINHEAP, SKEW, 7, 100002);
+
+
+    if (insertPatients(hospitalOne, size) != true){
+        return false; 
+    }
+
+    Hospital hospitalTwo(hospitalOne);
+
+  
+    if (hospitalOne.m_size != hospitalTwo.m_size){
+        return false; 
+    }
+
+    if (hospitalOne.m_heapType != hospitalTwo.m_heapType){
+        return false; 
+    }
+
+    if (hospitalOne.m_structure != hospitalTwo.m_structure){
+        return false; 
+    }
+
+    if (countNodes(hospitalTwo.m_heap) != countNodes(hospitalOne.m_heap)){
+        return false; 
+    }
+
+
+    if (isHeapOrdered(hospitalTwo.m_heap, hospitalTwo.getPriorityFn(), hospitalTwo.m_heapType) != true){
+        return false; 
+    }
+
+    if (isHeapOrdered(hospitalOne.m_heap, hospitalOne.getPriorityFn(), hospitalOne.m_heapType) != true){
+        return false; 
+    }
+
+
+    if (testTreeEquality(hospitalOne.m_heap, hospitalTwo.m_heap) != true){
+        return false; 
+    }
+
+    return true;
+}
+
+/*
+Test the Hospital class copy constructor for an edge case.
+*/
+
+bool Tester::testHospitalCCEdge(){
+
+    Hospital hospitalOne;
+
+    Hospital hospitalTwo(hospitalOne);
+
+  
+    if (hospitalTwo.m_size != 0){
+        return false; 
+    }
+
+    if (hospitalTwo.m_heap != nullptr){
+        return false; 
+    }
+
+    return true;
+}
+
+/*
+Test the Hospital class assignment operator for a normal case.
+*/
+
+bool Tester::testHospitalAONormal(){
+    int size = 250;
+    Hospital hospitalOne(priorityFn2, MINHEAP, SKEW, 7, 100001);
+
+
+    if (insertPatients(hospitalOne, size) != true){
+        return false; 
+    }
+
+    int sizeTwo = 150;
+    Hospital hospitalTwo(priorityFn2, MINHEAP, SKEW, 7, 100002);
+
+    if (insertPatients(hospitalTwo, sizeTwo) != true){
+        return false; 
+    }
+
+    hospitalTwo = hospitalOne;
+
+    if (hospitalOne.m_size != hospitalTwo.m_size){
+        return false; 
+    }
+
+    if (hospitalOne.m_heapType != hospitalTwo.m_heapType){
+        return false; 
+    }
+
+    if (hospitalOne.m_structure != hospitalTwo.m_structure){
+        return false; 
+    }
+
+    if (countNodes(hospitalTwo.m_heap) != countNodes(hospitalOne.m_heap)){
+        return false; 
+    }
+
+
+    if (isHeapOrdered(hospitalTwo.m_heap, hospitalTwo.getPriorityFn(), hospitalTwo.m_heapType) != true){
+        return false; 
+    }
+
+    if (isHeapOrdered(hospitalOne.m_heap, hospitalOne.getPriorityFn(), hospitalOne.m_heapType) != true){
+        return false; 
+    }
+
+
+    if (testTreeEquality(hospitalOne.m_heap, hospitalTwo.m_heap) != true){
+        return false; 
+    }
+
+    return true;
+}
+
+/*
+Test the Hospital class assignment operator for an edge case.
+*/
+
+bool Tester::testHospitalAOEdge(){
+
+    int size = 150;
+    Hospital hospitalOne(priorityFn2, MINHEAP, SKEW, 7, 100001);
+
+
+    if (insertPatients(hospitalOne, size) != true){
+        return false; 
+    }
+
+    Hospital hospitalTwo;
+
+    hospitalOne = hospitalTwo;
+
+    if (hospitalOne.m_size != 0){
+        return false; 
+    }
+
+    if (hospitalOne.m_heap != nullptr){
+        return false; 
+    }
+
+    return true;
+}
+
+/*
+Test that attempting to dequeue an empty queue throws an out_of_range exception.
+*/
+
+bool Tester::testEmptyDequeue(){
+    return true;
+}
+
+/*
+Test that attempting to merge queues with different priority functions throws a domain_error exception.
+*/
+
+bool Tester::testIncompatibleMerge(){
+    return true;
 }
