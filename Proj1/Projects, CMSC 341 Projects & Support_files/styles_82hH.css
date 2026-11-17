@@ -1,0 +1,113 @@
+/* Move down content because we have a fixed navbar that is 3.5rem tall */
+
+body {
+  padding-top: 3.5rem;
+}
+.danger {
+  border: 2px solid #ee7878;
+  background-color: #eeb4b4;
+  padding: 10px 20px;
+  color: #444;
+  margin-bottom: 15px;
+}
+.warn {
+  border: 2px solid #f0e6a6;
+  background-color: #fff7c6;
+  padding: 10px 20px;
+  color: #444;
+  margin-bottom: 15px;
+}
+.info {
+  border: 2px solid #bae2f0;
+  background-color: #e3f4f9;
+  padding: 10px 20px;
+  color: #444;
+  margin-bottom: 15px;
+}
+#content .key {
+  border: 2px solid #e1e1e1;
+  background-color: #f9f9f9;
+  color: #444;
+  padding: 5px 10px;
+/*    font-family: "Helvetica Neue", Arial, Helvetica, "Nimbus Sans L", sans-serif; */
+  margin-right: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -moz-box-shadow: 3px 3px 3px #666;
+  -webkit-box-shadow: 3px 3px 3px #666;
+  box-shadow: 3px 3px 3px #666;
+}
+
+#content .keys {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  clear: both;
+}
+#content .keys div {
+  float: left;
+  width: 320px;
+}
+#content .keys p {
+  margin-left: 340px;
+  clear: none;
+}
+code, kbd, samp {
+  font-family: Menlo, Monaco, Consolas, monospace;
+/*    background-color: #F9F9F9; */
+}
+pre {
+  font-family: Menlo, Monaco, Consolas, "Bitstream Vera Sans Mono", "Courier New", Courier, monospace !important;
+  font-size: 14px !important;
+}
+/* syntaxhighlighter */
+#content .code, #content .syntaxhighlighter {
+  overflow-y: none !important; /* chrome always seems to use a scrollbar, this tosses it */
+  border: 2px solid #e1e1e1;
+/*    background-color: #f9f9f9; */
+  color: #444;
+  padding: 10px 20px;
+  width: auto !important;
+  margin-bottom: 15px;
+  font-family: Menlo, Monaco, Consolas, "Bitstream Vera Sans Mono", "Courier New", Courier, monospace !important;
+  font-size: 14px !important;
+}
+
+.monospace{
+  font-family:'Lucida Console', monospace;
+}
+
+.keycolumn{
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+.keydescription{
+  padding-left:2em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 30%;
+}
+
+.center-large {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 60%;
+}
+
+.proj-logo{
+  width:3rem;
+  height: 3rem;
+}
+
+.my-accordion{
+  background-color:beige;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
